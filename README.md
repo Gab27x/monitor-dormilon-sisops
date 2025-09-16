@@ -8,3 +8,15 @@ v1: es un ciclo infinito , los estudiantes piden ayuda una y otra vez.
 
 
 v2: es finito ya que una vez el estudiante recibe ayuda del monitor se va del todo , si quiere pedir ayuda y el monitor esta ocupado y ademas no hay silla este se va a programar.
+
+## Compilación
+
+```bash
+javac -cp src src/app/Main.java -d bin 
+```
+
+## Ejecución
+
+```bash
+java -cp bin app.Main   
+```
