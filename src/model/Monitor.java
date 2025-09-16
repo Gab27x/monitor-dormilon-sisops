@@ -1,21 +1,28 @@
 package model;
+
 import app.Main;
+
 public class Monitor implements Runnable {
 
     @Override
     public void run() {
         while (true) {
             try {
-                // Si no hay estudiantes, el monitor se duerme
+                
                 if (Main.estudiantes.availablePermits() == 0 && Main.estudiantesEsperando.get() == 0) {
-                    System.out.println("El monitor se duerme, no hay estudiantes.");
-                }
+                System.out.println("💤 El monitor se duerme, no hay estudiantes.");
+                Main.monitorDormido = true;
+            }
 
-                // Espera hasta que llegue un estudiante
-                Main.estudiantes.acquire();
+                Main.estudiantes.acquire(); // aquí se despierta
+
+                Main.monitorDormido = false;
+
 
                 Main.mutex.acquire();
-                Main.estudiantesEsperando.decrementAndGet();
+                if (Main.estudiantesEsperando.get() > 0) {
+                    Main.estudiantesEsperando.decrementAndGet();
+                }
                 System.out.println("\nMonitor ayudando a un estudiante...");
                 Main.monitor.release(); // Deja entrar al estudiante
                 Main.mutex.release();
@@ -25,7 +32,9 @@ public class Monitor implements Runnable {
                 System.out.println("Monitor terminó de ayudar\n");
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // Cuando se interrumpe, termina el hilo
+                System.out.println("🛑 El monitor se apaga.");
+                return;
             }
         }
     }
